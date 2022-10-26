@@ -1,0 +1,19 @@
+{
+  "name": "exserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "express node JavaScript"
+  ],
+  "author": "silence",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.1.3",
+    "express": "^4.18.2",
+    "sha1": "^1.1.1"
+  }
+}
