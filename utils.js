@@ -40,8 +40,14 @@ async function getToken () {
   return res.data.access_token;
 }
 
+async function getFollowUserList (token, nextOpId = '') {
+  let res = await axiosGet('https://api.weixin.qq.com/cgi-bin/user/get', { token, nextOpId });
+  return res.data.openid
+}
+
 module.exports = {
   axiosPost,
   axiosGet,
-  getToken
+  getToken,
+  getFollowUserList
 }
