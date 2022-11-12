@@ -61,22 +61,24 @@ async function find55 (year = '') {
   // div.calendar-right-date_FVDk_ 
   const date55 = await page.$eval('.calendar-right-date_FVDk_', el => el.innerText);
   browser.close()
-  console.log(date55)
-  // return date55
+  return date55
 }
+async function init () {
+  let day55 = await find55()
+  let restDay = await handleDateRun(day55)
+  console.log(restDay)
+}
+init()
 
-let day55 = find55()
-// let restDay = handleDateRun()
-// console.log(day55)
 // 日期处理执行
-function handleDateRun () {
+function handleDateRun (day55) {
   let tarBirthDay = returnTmps(day55) + 86400000
   let restTmps = calcDateTmps(tarBirthDay)
   let restDay = getTargetDown(restTmps)
 
   if (restDay < 0) {
     // 获取下一年 
-    let nextYear = new Date.getFullYear() + 1
+    let nextYear = new Date().getFullYear() + 1
     day55 = find55(nextYear)
     //  在重新计算
     tarBirthDay = returnTmps(day55) + 86400000
