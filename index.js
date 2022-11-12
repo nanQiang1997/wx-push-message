@@ -8,8 +8,6 @@ const app = express()
 
 app.use(express.static('./static')).use(router)
 app.get('/user', (req, res) => {
-  console.log(req.query)
-  // console.log(res)
   res.send({
     "data": {
       "payUrl": null,
@@ -49,21 +47,12 @@ app.get('/weChatDevCheck', function (req, res, next) {
 async function templateMessageSend () {
   const token = await getToken();
 
-  const { data: resObj } = await axiosGet('http://192.168.8.68:8081/search')
+  const { data: resObj } = await axiosGet('http://127.0.0.1:8081/search?keyword=深圳')
   const {
     city,
     data: weekData
   } = resObj
   const today = weekData[0]
-
-  // console.log(city)
-  // todayResDom.innerHTML = `
-  //   <div>${city}</div>
-  //   <p>温度:${today.tem}</p>
-  //   <p>空气等级:${today.air_level}</p>
-  //   <p>天气:${today.phrase}</p>
-  //   <p>${today.narrative}</p>
-  // `
   const url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' + token;
   const params = {
     touser: 'o4nsI6KnuVkOFeTJXcd_NcfxpKBY', // 用户openid 3
@@ -84,10 +73,31 @@ async function templateMessageSend () {
     },
   };
   let res = await axiosPost(url, params);
-  console.log('res: ', res.data);
 }
-templateMessageSend();
+// 获取当前时分
+function getHM () {
+  const DateRes = new Date();
+  const H = DateRes.getHours().toString();
+  const M = DateRes.getMinutes().toString();
+  return [H, M];
+}
+let timeName = "";
+
+// 执行定时任务
+function timeTest (timeStr, cb) {
+  clearTimeout(timeName);
+  let [h, m] = timeStr.split(":")
+  const [H, M] = getHM();
+  timeName = setTimeout(() => {
+    if (h === H && M === m) {
+      cb();
+    } else {
+      timeTest(timeStr, cb);
+    }
+  }, 31000);
+}
+timeTest("7:30", templateMessageSend);
 
 app.listen(8081, () => {
-  console.log('server running at http://192.168.8.68:8081')
+  console.log('server running at http://127.0.0.1:8081')
 })
